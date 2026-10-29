@@ -2,12 +2,16 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 const Etudiant = require("./models/Etudiant");
 const Utilisateur = require("./models/Utilisateurs");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
 app.use(express.json());
 
 app.get("/", (req, res) => {
