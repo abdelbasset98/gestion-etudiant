@@ -4,14 +4,18 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const cors = require("cors");
 const Etudiant = require("./models/Etudiant");
-const Utilisateur = require("./models/Utilisateurs");
+const Utilisateur = require("./models/Utilisateur");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: "http://localhost:5173"
-}));
+// Origines autorisées : React en local + domaine(s) Vercel (séparés par des virgules)
+const origines = ["http://localhost:5173"];
+if (process.env.FRONTEND_URL) {
+  origines.push(...process.env.FRONTEND_URL.split(",").map((u) => u.trim()));
+}
+
+app.use(cors({ origin: origines }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -24,7 +28,6 @@ app.get("/api/test", (req, res) => {
 
 // ---------- CRUD ETUDIANTS ----------
 
-// GET - Lire tous les étudiants
 app.get("/api/etudiants", async (req, res) => {
   try {
     const etudiants = await Etudiant.find();
@@ -34,7 +37,6 @@ app.get("/api/etudiants", async (req, res) => {
   }
 });
 
-// POST - Créer un étudiant
 app.post("/api/etudiants", async (req, res) => {
   try {
     const nouvelEtudiant = new Etudiant({
@@ -49,7 +51,6 @@ app.post("/api/etudiants", async (req, res) => {
   }
 });
 
-// PUT - Modifier un étudiant
 app.put("/api/etudiants/:id", async (req, res) => {
   try {
     const etudiant = await Etudiant.findByIdAndUpdate(
@@ -70,7 +71,6 @@ app.put("/api/etudiants/:id", async (req, res) => {
   }
 });
 
-// DELETE - Supprimer un étudiant
 app.delete("/api/etudiants/:id", async (req, res) => {
   try {
     const etudiant = await Etudiant.findByIdAndDelete(req.params.id);
@@ -85,7 +85,6 @@ app.delete("/api/etudiants/:id", async (req, res) => {
 
 // ---------- AUTHENTIFICATION ----------
 
-// REGISTER - Inscription
 app.post("/api/auth/register", async (req, res) => {
   try {
     const { nom, email, password } = req.body;
@@ -131,7 +130,6 @@ app.post("/api/auth/register", async (req, res) => {
   }
 });
 
-// LOGIN - Connexion
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;

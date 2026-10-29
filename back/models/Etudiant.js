@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
-const etudiantCRMSchema = new mongoose.Schema({
- nom: { type: String, required: true },
- email: { type: String, required: true, unique: true },
- age: { type: Number, required: true }
+
+const etudiantSchema = new mongoose.Schema({
+  nom: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  age: { type: Number, required: true }
 });
-module.exports = mongoose.model("Etudiant", etudiantCRMSchema);
+
+module.exports = mongoose.model("Etudiant", etudiantSchema);

@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function App() {
   const [etudiants, setEtudiants] = useState([]);
   const [erreur, setErreur] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/etudiants")
+    fetch(`${API_URL}/api/etudiants`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Impossible de charger les étudiants");
